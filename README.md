@@ -70,10 +70,8 @@
 </a>
 <br />
 
-<h2>Thank you for the visit. 👀</h2>
+<h2>Thank you for the visit my github homepage. 👀</h2>
 
 <a href="http://profile-counter.glitch.me/huangfushan/count.svg">
   <img alt="count.svg" src="http://profile-counter.glitch.me/huangfushan/count.svg" />
 </a>
-
-Please give a Star if you like.

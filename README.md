@@ -32,9 +32,9 @@
 <a href="https://yijing.emooa.com">
   <img class="page-img" alt="易经64" src="https://raw.githubusercontent.com/huangfushan/huangfushan/main/img/yijing.png" style="height: 140px; width: 256px;border-radius: 10px;"/>
 </a>
-<a href="https://chat.emooa.com">
+<!-- <a href="https://chat.emooa.com">
   <img class="page-img" alt="AI Chat" src="https://raw.githubusercontent.com/huangfushan/huangfushan/main/img/chat.png" style="height: 140px; width: 256px;border-radius: 10px;"/>
-</a>
+</a> -->
 
 <h2>My Github Status 🦸</h2>
 
@@ -42,9 +42,9 @@
   <img alt="github" src="https://github-readme-stats.vercel.app/api?username=huangfushan&show_icons=true&show_owner=true&count_private=true&theme=merko" />
 </a>
 
-<a href="https://activity-graph.herokuapp.com/graph?username=huangfushan&theme=github">
+<!-- <a href="https://activity-graph.herokuapp.com/graph?username=huangfushan&theme=github">
   <img alt="graph" src="https://activity-graph.herokuapp.com/graph?username=huangfushan&theme=github" />
-</a>
+</a> -->
 
 <br />
 <br />
@@ -62,7 +62,7 @@
   <img alt="在线压缩 Squoosh" src="https://github-readme-stats.vercel.app/api/pin/?username=huangfushan&repo=squoosh&show_owner=true" />
 </a>
 <a href="https://github.com/huangfushan/switch" target="_blank">
-  <img alt="在线压缩 Squoosh" src="https://github-readme-stats.vercel.app/api/pin/?username=huangfushan&repo=switch&show_owner=true" />
+  <img alt="炫酷 Switch 组件" src="https://github-readme-stats.vercel.app/api/pin/?username=huangfushan&repo=switch&show_owner=true" />
 </a>
 </details>
 

@@ -53,19 +53,19 @@
 <br />
 <summary>More Repositories ...</summary>
 <a href="https://github.com/huangfushan/blog" target="_blank">
-  <img alt="huangfushan" src="https://github-readme-stats.vercel.app/api/pin/?username=huangfushan&repo=blog&show_owner=true"/>
+  <img alt="huangfushan" src="https://github-readme-stats.vercel.app/api/pin/?username=huangfushan&repo=blog"/>
 </a>
 <a href="https://github.com/huangfushan/divination" target="_blank">
-  <img alt="AI 占卜" src="https://github-readme-stats.vercel.app/api/pin/?username=huangfushan&repo=divination&show_owner=true" />
+  <img alt="AI 占卜" src="https://github-readme-stats.vercel.app/api/pin/?username=huangfushan&repo=divination" />
 </a>
 <a href="https://github.com/huangfushan/squoosh" target="_blank">
-  <img alt="在线压缩 Squoosh" src="https://github-readme-stats.vercel.app/api/pin/?username=huangfushan&repo=squoosh&show_owner=true" />
+  <img alt="在线压缩 Squoosh" src="https://github-readme-stats.vercel.app/api/pin/?username=huangfushan&repo=squoosh" />
 </a>
 <a href="https://github.com/huangfushan/switch" target="_blank">
-  <img alt="炫酷 Switch 组件" src="https://github-readme-stats.vercel.app/api/pin/?username=huangfushan&repo=switch&show_owner=true" />
+  <img alt="炫酷 Switch 组件" src="https://github-readme-stats.vercel.app/api/pin/?username=huangfushan&repo=switch" />
 </a>
 <a href="https://github.com/huangfushan/canvas-geojson" target="_blank">
-  <img alt="Canvas 渲染 Geojson" src="https://github-readme-stats.vercel.app/api/pin/?username=huangfushan&repo=canvas-geojson&show_owner=true" />
+  <img alt="Canvas 渲染 Geojson" src="https://github-readme-stats.vercel.app/api/pin/?username=huangfushan&repo=canvas-geojson" />
 </a>
 </details>
 

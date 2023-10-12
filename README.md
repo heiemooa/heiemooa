@@ -61,6 +61,9 @@
 <a href="https://github.com/huangfushan/squoosh" target="_blank">
   <img alt="在线压缩 Squoosh" src="https://github-readme-stats.vercel.app/api/pin/?username=huangfushan&repo=squoosh&show_owner=true" />
 </a>
+<a href="https://github.com/huangfushan/switch" target="_blank">
+  <img alt="在线压缩 Squoosh" src="https://github-readme-stats.vercel.app/api/pin/?username=huangfushan&repo=switch&show_owner=true" />
+</a>
 </details>
 
 <h2>Language 🐱</h2>

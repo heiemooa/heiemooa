@@ -64,6 +64,9 @@
 <a href="https://github.com/huangfushan/switch" target="_blank">
   <img alt="炫酷 Switch 组件" src="https://github-readme-stats.vercel.app/api/pin/?username=huangfushan&repo=switch&show_owner=true" />
 </a>
+<a href="https://github.com/huangfushan/canvas-geojson" target="_blank">
+  <img alt="Canvas 渲染 Geojson" src="https://github-readme-stats.vercel.app/api/pin/?username=huangfushan&repo=canvas-geojson&show_owner=true" />
+</a>
 </details>
 
 <h2>Language 🐱</h2>

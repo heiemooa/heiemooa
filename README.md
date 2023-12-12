@@ -13,7 +13,7 @@
 
 <!-- 个人资料徽标 -->
 <div align="center" style="margin-bottom: 20px">
-  <a href="https://t.me/heiemooa"><img src="https://img.shields.io/badge/个人主页-1a6cba?style=flat-square&logo=homeadvisor&logoColor=fff" style="margin: 4px"></a>
+  <a href="https://emooa.com"><img src="https://img.shields.io/badge/个人主页-1a6cba?style=flat-square&logo=homeadvisor&logoColor=fff" style="margin: 4px"></a>
   <a href="https://blog.emooa.com/"><img src="https://img.shields.io/badge/博客-40c100?style=flat-square&logo=apachespark&logoColor=fadb14" style="margin: 4px"></a>
   <a href="mailto:heiemooa@gmail.com"><img src="https://img.shields.io/badge/邮件-fceaeb?style=flat-square&logo=gmail" style="margin: 4px"></a>
   <a href="https://twitter.com/heiemooa"><img src="https://img.shields.io/badge/推特-000000?style=flat-square&logo=x" style="margin: 4px"></a>

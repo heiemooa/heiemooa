@@ -1,15 +1,18 @@
 <!-- 动态打字效果 -->
 <h1 align="center">
-  <a href="https://emooa.com/">
-    <img src="https://readme-typing-svg.herokuapp.com?color=%2336BCF7&lines=因为不可能，所以才值得相信～;Hello There !">
+  <a href="https://blog.anheyu.com/">
+    <img src="https://readme-typing-svg.herokuapp.com?color=%2336BCF7&lines=Hello+There+!+🐱;我是一个不断摸爬滚打的小小卡拉米~;喜欢旅行，这个世界有很多美丽的风景。;喜欢摄影，用心记录每个有趣的瞬间">
   </a>
 </h1>
 
-<!-- 贪吃蛇代码贡献图 -->
-<div align="center"><img src="https://github.com/heiemooa/heiemooa/blob/assets/github-snake.gif?raw=true" /></div>
+<!-- [![Typing SVG](https://readme-typing-svg.herokuapp.com?color=%2336BCF7&lines=Hello+There+!+🐱;我是一个不断摸爬滚打的小小卡拉米~;喜欢旅行，这个世界有很多美丽的风景。;喜欢摄影，用心记录每个有趣的瞬间)](https://blog.anheyu.com) -->
+
+# 🐱 Hello There !
+
+欢迎来到我的主页 😝，我是一个不断摸爬滚打的小小卡拉米 🐱，喜欢旅行，这个世界有很多美丽的风景 ✈️，喜欢摄影，用心记录每个有趣的瞬间 📹 ~
 
 <!-- 个人资料徽标 -->
-<div align="center" style="margin-bottom: 40px">
+<div align="center" style="margin-bottom: 20px">
   <a href="https://t.me/heiemooa"><img src="https://img.shields.io/badge/个人主页-1a6cba?style=flat-square&logo=homeadvisor&logoColor=fff" style="margin: 4px"></a>
   <a href="https://blog.emooa.com/"><img src="https://img.shields.io/badge/博客-40c100?style=flat-square&logo=apachespark&logoColor=fadb14" style="margin: 4px"></a>
   <a href="mailto:heiemooa@gmail.com"><img src="https://img.shields.io/badge/邮件-fceaeb?style=flat-square&logo=gmail" style="margin: 4px"></a>
@@ -17,11 +20,17 @@
   <a href="https://t.me/heiemooa"><img src="https://img.shields.io/badge/即时通讯-d4eaff?style=flat-square&logo=telegram" style="margin: 4px"s></a>
 </div>
 
-# 🙋 Hello
+<!-- 贪吃蛇代码贡献图 -->
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/heiemooa/heiemooa/output/github-snake-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/heiemooa/heiemooa/output/github-snake.svg">
+  <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/heiemooa/heiemooa/output/github-snake.svg">
+</picture>
 
-欢迎来到我的主页 😝，我是一个不断摸爬滚打的小小卡拉米 🐱，喜欢旅行，这个世界有很多美丽的风景 ✈️，喜欢摄影，用心记录每个有趣的瞬间 📹 ~
+<h3></h3>
 
 💪 正在学习:
+
 <br>
 
 ![Docker](https://img.shields.io/badge/Docker-d4eaff?style=flat-square&logo=docker)
@@ -57,8 +66,8 @@
 <br>
 
 <!-- GitHub奖杯🏆 -->
-<div align="center"><img  src="https://github-profile-trophy.vercel.app/?username=heiemooa&theme=gruvbox&row=1&column=7&no-frame=true&no-bg=true" /></div>
-<br>
+<!-- <div align="center"><img  src="https://github-profile-trophy.vercel.app/?username=heiemooa&theme=gruvbox&row=1&column=7&no-frame=true&no-bg=true" /></div>
+<br> -->
 
 <!-- GitHub数据统计 -->
 <div align="center">

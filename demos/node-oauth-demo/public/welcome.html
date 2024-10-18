@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Hello</title>
+  </head>
+
+  <body></body>
+  <script>
+    const query = window.location.search.substring(1) || "";
+    const token = query.split("token=")[1];
+  </script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/1.1.3/axios.js"></script>
+  <script>
+    axios({
+      method: "get",
+      url: `https://api.github.com/user`,
+      headers: {
+        accept: "application/json",
+        Authorization: `token ${token}`,
+      },
+    }).then((res) => {
+      document.body.appendChild(
+        document.createTextNode(`Welcome, ${decodeURIComponent(res.data.name)}`)
+      );
+    });
+    axios({
+      method: "get",
+      url: `https://api.github.com/user/repos`,
+      headers: {
+        accept: "application/json",
+        Authorization: `token ${token}`,
+      },
+    });
+  </script>
+</html>

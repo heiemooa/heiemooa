@@ -1,0 +1,222 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>搭建个人博客 Hexo + Github Page | Fushan Huang's Blog</title><meta name="keywords" content="教程,部署,搭建个人博客,博客,blog,个人博客,hexo,Github Page,github,对象存储OSS,oss,内容分发网络CDN,cdn,阿里云函数计算FC,fc,vercel,网站托管服务"><meta name="author" content="huangfushan,243973775@qq.com"><meta name="copyright" content="huangfushan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="技术选型 在传统认知里，搭建个人静态网站我们需要：   注册域名 购买云服务器 域名备案 构建静态网页 部署前端静态资源 DNS 解析   上诉方案作为技术小白或者初学者来说，上手较难，时间、金钱成本花费较大，不推荐。我们探讨的是如何在低成本的基础上，利用市面上现有的成熟的博客框架，搭建属于我们自己的个人博客。  前端框架 为了帮助开发者快速搭建所需的网站，这里提供的几种目前市面上比较火的博客框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭建个人博客 Hexo + Github Page">
+<meta property="og:url" content="https://huangfushan.github.io/2021/04/26/blog/index.html">
+<meta property="og:site_name" content="Fushan Huang&#39;s Blog">
+<meta property="og:description" content="技术选型 在传统认知里，搭建个人静态网站我们需要：   注册域名 购买云服务器 域名备案 构建静态网页 部署前端静态资源 DNS 解析   上诉方案作为技术小白或者初学者来说，上手较难，时间、金钱成本花费较大，不推荐。我们探讨的是如何在低成本的基础上，利用市面上现有的成熟的博客框架，搭建属于我们自己的个人博客。  前端框架 为了帮助开发者快速搭建所需的网站，这里提供的几种目前市面上比较火的博客框架">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hfscdn.vercel.app/blog/image/cover-blog.png">
+<meta property="article:published_time" content="2021-04-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-30T06:42:50.616Z">
+<meta property="article:author" content="huangfushan">
+<meta property="article:tag" content="blog">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hfscdn.vercel.app/blog/image/cover-blog.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://huangfushan.github.io/2021/04/26/blog/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-30 14:42:50'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://hfscdn.vercel.app/blog/image/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 目录</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 媒体</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://hfscdn.vercel.app/blog/image/cover-blog.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Fushan Huang's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 目录</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 媒体</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">搭建个人博客 Hexo + Github Page</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2021-04-25T16:00:00.000Z" title="undefined 2021-04-26 00:00:00">2021-04-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="搭建个人博客 Hexo + Github Page"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h1><blockquote>
+<p>在传统认知里，搭建个人静态网站我们需要：</p>
+</blockquote>
+<ul>
+<li>注册域名</li>
+<li>购买云服务器</li>
+<li>域名备案</li>
+<li>构建静态网页</li>
+<li>部署前端静态资源</li>
+<li>DNS 解析</li>
+</ul>
+<blockquote>
+<p>上诉方案作为技术小白或者初学者来说，上手较难，时间、金钱成本花费较大，不推荐。<br>我们探讨的是如何在低成本的基础上，利用市面上现有的成熟的博客框架，搭建属于我们自己的个人博客。</p>
+</blockquote>
+<h1 id="前端框架"><a href="#前端框架" class="headerlink" title="前端框架"></a>前端框架</h1><blockquote>
+<p>为了帮助开发者快速搭建所需的网站，这里提供的几种目前市面上比较火的博客框架，可以帮助我们快速的生成所需的静态网页。</p>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo</a> 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。<br>Hexo的主题样式也有很多好看的，而且github都有star上万的。</li>
+<li><a target="_blank" rel="noopener" href="https://wordpress.org/">Wordpress</a> 是使用PHP语言开发的博客平台，用户可以在支持PHP和MySQL数据库的服务器上架设属于自己的网站。有着许多第三方开发的免费模板，安装方式简单易用。</li>
+<li><a target="_blank" rel="noopener" href="https://vuepress.vuejs.org/">Vuepress</a> 由两部分组成：一个以 Vue 驱动的主题系统的简约静态网站生成工具，和一个为编写技术文档而优化的默认主题。它是为了支持 Vue 子项目的文档需求而创建的。</li>
+<li><a target="_blank" rel="noopener" href="https://www.docusaurus.cn/">Docusaurus</a> 是一个静态网站生成器，基于 React 技术构建，编译成的是静态的 HTML css，支持 Markdown 语法。</li>
+<li><a target="_blank" rel="noopener" href="https://d.umijs.org/zh-CN">Dumi</a> 是一款为组件开发场景而生的文档工具，与 <a target="_blank" rel="noopener" href="https://github.com/umijs/father">father</a> 一起为开发者提供一站式的组件开发体验，father 负责构建，而 dumi 负责组件开发及组件文档生成。</li>
+</ul>
+<h1 id="部署方案"><a href="#部署方案" class="headerlink" title="部署方案"></a>部署方案</h1><blockquote>
+<p>当然部署方案有很多，在服务器不用自己搭建的的基础上，无非就是找到可以实现免费托管的云厂商进行托管前端静态资源，生成可供访问的域名。</p>
+</blockquote>
+<p>这里仅列出几种方案，供参考。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://pages.github.com/">Github Pages</a></li>
+<li><a target="_blank" rel="noopener" href="https://vercel.com/">Vercel</a></li>
+<li><a target="_blank" rel="noopener" href="https://coding.net/">Coding</a></li>
+<li>Serverless（无服务器，按量付费）<ul>
+<li><a target="_blank" rel="noopener" href="http://serverless-devs.com/">Serverless Devs 阿里云</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.serverless.com/cn/">Serverless Framework 腾讯云</a></li>
+</ul>
+</li>
+</ul>
+<!-- - Serverless
+- [内容分发网络CDN](https://www.aliyun.com/product/cdn) + [对象存储OSS](https://www.aliyun.com/product/oss)
+- [阿里云函数计算FC](https://www.aliyun.com/product/fc) -->
+
+
+<h1 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h1><blockquote>
+<p>上诉博客框架以及部署方案任选其一，下面仅以 <code>Hexo </code>  为例，做 <code>Github Pages</code> 部署方案的介绍，感兴趣可以自行了解其他框架的使用。</p>
+</blockquote>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>安装 Hexo 相当简单，只需要先安装下列应用程序即可：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://nodejs.org/en/">Node.js</a> (Node.js 版本需不低于 10.13，建议使用 Node.js 12.0 及以上版本)</li>
+<li><a target="_blank" rel="noopener" href="http://git-scm.com/">Git</a></li>
+</ul>
+<p><img src="https://hfscdn.vercel.app/blog/image/node-git-version.jpg" alt="iamge"></p>
+<p>如图，如果您的电脑中已经安装上述必备程序，那么恭喜您！你可以直接前往安装 <a href="#%E5%AE%89%E8%A3%85-Hexo">安装 Hexo</a>。</p>
+<h3 id="安装-Git"><a href="#安装-Git" class="headerlink" title="- 安装 Git"></a>- 安装 Git</h3><p>Windows：下载并安装<a target="_blank" rel="noopener" href="https://git-scm.com/download/win">Git</a><br>Mac：使用 <a target="_blank" rel="noopener" href="https://brew.sh/">Homebrew</a>, <a target="_blank" rel="noopener" href="https://www.macports.org/">MacPorts</a> 或者下载<a target="_blank" rel="noopener" href="https://sourceforge.net/projects/git-osx-installer/">安装程序</a>。<br>Linux (Ubuntu, Debian)：<code>sudo apt-get install git-core</code><br>Linux (Fedora, Red Hat, CentOS)：<code>sudo yum install git-core</code></p>
+<h3 id="安装-Node-js"><a href="#安装-Node-js" class="headerlink" title="- 安装 Node.js"></a>- 安装 Node.js</h3><p>Node.js 为大多数平台提供了官方的<a target="_blank" rel="noopener" href="https://nodejs.org/en/download/">安装程序</a>。对于中国大陆地区用户，可以前往<a target="_blank" rel="noopener" href="https://npm.taobao.org/mirrors/node">淘宝 Node.js 镜像</a>下载。</p>
+<p>其它的安装方法：</p>
+<p>Windows：通过 <a target="_blank" rel="noopener" href="https://github.com/jasongin/nvs/">nvs</a>（推荐）或者 <a target="_blank" rel="noopener" href="https://github.com/nvm-sh/nvm">nvm</a> 安装。<br>Mac：使用 <a target="_blank" rel="noopener" href="https://brew.sh/">Homebrew</a> 或 <a target="_blank" rel="noopener" href="https://www.macports.org/">MacPorts</a> 安装。<br>Linux（DEB/RPM-based）：从 <a target="_blank" rel="noopener" href="https://github.com/nodesource/distributions">NodeSource</a> 安装。<br>其它：使用相应的软件包管理器进行安装，可以参考由 Node.js 提供的 <a target="_blank" rel="noopener" href="https://nodejs.org/en/download/package-manager/">指导</a>。</p>
+<h2 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h2><h3 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="- 安装 Hexo"></a>- 安装 Hexo</h3><p>所有必备的应用程序安装完成后，即可使用 <code>npm</code> 安装 <code>Hexo</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="- 初始化"></a>- 初始化</h3><p>安装 <code>Hexo</code> 完成后，请执行下列命令，<code>Hexo</code> 将会在指定文件夹中新建所需要的文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hexo init &lt;folder&gt; &#x2F;&#x2F; 初始化，如 hexo init blog</span><br><span class="line">cd &lt;folder&gt;</span><br><span class="line">npm install &#x2F;&#x2F; 可选，hexo 初始化默认会自动安装相关依赖</span><br><span class="line">hexo server &#x2F;&#x2F; 本地启动</span><br></pre></td></tr></table></figure>
+<p><img src="https://hfscdn.vercel.app/blog/image/hexo-server.jpg" alt="hexo"><br>本地启动后，出现上即启动成功，浏览器登录图示 <code>http://localhost:4000</code> 地址即可本地访问。</p>
+<p>更多配置信息见 <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo 配置</a></p>
+<h2 id="部署（Github-Page）"><a href="#部署（Github-Page）" class="headerlink" title="部署（Github Page）"></a>部署（Github Page）</h2><blockquote>
+<p>上面已经把静态页面搭建完毕，接下来只需把代码部署到指定云厂商托管即可，以下提供三种部署方案，仅供参考。</p>
+</blockquote>
+<h3 id="Github-创建-repository"><a href="#Github-创建-repository" class="headerlink" title="- Github 创建 repository"></a>- Github 创建 repository</h3><p>在本教程中，我们 将 <code>Hexo</code> 博客部署到 <code>GitHub Pages</code> 上。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/new">新建</a>一个 repository。如果你希望你的站点能通过 &lt;你的 GitHub 用户名&gt;.github.io 域名访问，你的 repository 应该直接命名为 &lt;你的 GitHub 用户名&gt;.github.io，如我的 Github 用户名为<code>huangfushan</code>, repository 即 <code>huangfushan.github.io</code>。</li>
+<li>默认情况下不应该 public 目录将不会被推送到 repository 中，你应该检查 .gitignore 文件中是否包含 public 一行，如果没有请加上。</li>
+<li>首次使用 <code>Github</code> 可能需要<a target="_blank" rel="noopener" href="https://github.com/settings/ssh/new">绑定 SSH Key 密匙</a>，若无密匙见 <a href="/2021/04/25/git/">生成 SSH Key 密匙</a></li>
+</ul>
+<h3 id="Hexo-部署到-Github-Page"><a href="#Hexo-部署到-Github-Page" class="headerlink" title="- Hexo 部署到 Github Page"></a>- Hexo 部署到 Github Page</h3><ul>
+<li>安装 <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo-deployer-git">hexo-deployer-git</a><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save </span><br></pre></td></tr></table></figure></li>
+<li>修改配置 _config.yml<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: &lt;repository url&gt; # https:&#x2F;&#x2F;github.com&#x2F;你的 GitHub 用户名&#x2F;你的 GitHub 用户名.github.io.git</span><br></pre></td></tr></table></figure></li>
+<li>部署<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo generate &#x2F;&#x2F; 编译</span><br><span class="line">hexo deploy &#x2F;&#x2F; 部署</span><br></pre></td></tr></table></figure>
+<img src="https://hfscdn.vercel.app/blog/image/hexo-deploy.jpg" alt="deploy"></li>
+<li>访问 https://你的 GitHub 用户名.github.io，如 <a href="https://huangfushan.github.io/">https://huangfushan.github.io</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:243973775@qq.com">huangfushan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://huangfushan.github.io/2021/04/26/blog/">https://huangfushan.github.io/2021/04/26/blog/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://huangfushan.github.io" target="_blank">Fushan Huang's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/blog/">blog</a><a class="post-meta__tags" href="/tags/%E6%95%99%E7%A8%8B/">教程</a></div><div class="post_share"><div class="social-share" data-image="https://hfscdn.vercel.app/blog/image/cover-blog.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/05/05/deploy/"><img class="prev-cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/Photo/friends.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">静态网站托管服务</div></div></a></div><div class="next-post pull-right"><a href="/2021/04/25/git/"><img class="next-cover" src="https://hfscdn.vercel.app/blog/image/git-avatar.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Git 指令</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/05/05/deploy/" title="静态网站托管服务"><img class="cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/Photo/friends.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-05</div><div class="title">静态网站托管服务</div></div></a></div><div><a href="/2021/08/12/github-webhooks/" title="通过 Github Webhooks 做网站的自动化部署"><img class="cover" src="https://hfscdn.vercel.app/blog/image/cover-github-webhooks.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-12</div><div class="title">通过 Github Webhooks 做网站的自动化部署</div></div></a></div><div><a href="/2021/06/02/lerna/" title="通过 Lerna 实现多个软件包的管理"><img class="cover" src="https://hfscdn.vercel.app/blog/image/cover-lerna.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-02</div><div class="title">通过 Lerna 实现多个软件包的管理</div></div></a></div><div><a href="/2022/03/16/serverless-devs/" title="通过 @serverless-devs/s 部署静态网站到阿里云函数计算FC"><img class="cover" src="https://hfscdn.vercel.app/blog/image/cover-ast.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-16</div><div class="title">通过 @serverless-devs/s 部署静态网站到阿里云函数计算FC</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://hfscdn.vercel.app/blog/image/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">huangfushan</div><div class="author-info__description">Beleave you, beleave us, beleave we can change the world.</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/huangfushan"><i class="fab fa-github"></i><span>Github</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog !</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">技术选型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6"><span class="toc-number">2.</span> <span class="toc-text">前端框架</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E6%96%B9%E6%A1%88"><span class="toc-number">3.</span> <span class="toc-text">部署方案</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B"><span class="toc-number">4.</span> <span class="toc-text">开始</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83"><span class="toc-number">4.1.</span> <span class="toc-text">环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Git"><span class="toc-number">4.1.1.</span> <span class="toc-text">- 安装 Git</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Node-js"><span class="toc-number">4.1.2.</span> <span class="toc-text">- 安装 Node.js</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA"><span class="toc-number">4.2.</span> <span class="toc-text">搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Hexo"><span class="toc-number">4.2.1.</span> <span class="toc-text">- 安装 Hexo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">4.2.2.</span> <span class="toc-text">- 初始化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%EF%BC%88Github-Page%EF%BC%89"><span class="toc-number">4.3.</span> <span class="toc-text">部署（Github Page）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Github-%E5%88%9B%E5%BB%BA-repository"><span class="toc-number">4.3.1.</span> <span class="toc-text">- Github 创建 repository</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hexo-%E9%83%A8%E7%BD%B2%E5%88%B0-Github-Page"><span class="toc-number">4.3.2.</span> <span class="toc-text">- Hexo 部署到 Github Page</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/03/30/regexp/" title="正则表达式"><img src="https://hfscdn.vercel.app/blog/image/avatar-regex.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="正则表达式"/></a><div class="content"><a class="title" href="/2022/03/30/regexp/" title="正则表达式">正则表达式</a><time datetime="2022-03-30T10:59:22.000Z" title="发表于 2022-03-30 18:59:22">2022-03-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/16/serverless-devs/" title="通过 @serverless-devs/s 部署静态网站到阿里云函数计算FC"><img src="https://hfscdn.vercel.app/blog/image/cover-ast.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="通过 @serverless-devs/s 部署静态网站到阿里云函数计算FC"/></a><div class="content"><a class="title" href="/2022/03/16/serverless-devs/" title="通过 @serverless-devs/s 部署静态网站到阿里云函数计算FC">通过 @serverless-devs/s 部署静态网站到阿里云函数计算FC</a><time datetime="2022-03-15T16:00:00.000Z" title="发表于 2022-03-16 00:00:00">2022-03-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/12/github-webhooks/" title="通过 Github Webhooks 做网站的自动化部署"><img src="https://hfscdn.vercel.app/blog/image/cover-github-webhooks.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="通过 Github Webhooks 做网站的自动化部署"/></a><div class="content"><a class="title" href="/2021/08/12/github-webhooks/" title="通过 Github Webhooks 做网站的自动化部署">通过 Github Webhooks 做网站的自动化部署</a><time datetime="2021-08-11T16:00:00.000Z" title="发表于 2021-08-12 00:00:00">2021-08-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/10/babel/" title="（AST）抽象语法数 -- babel 插件"><img src="https://hfscdn.vercel.app/blog/image/cover-ast.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="（AST）抽象语法数 -- babel 插件"/></a><div class="content"><a class="title" href="/2021/08/10/babel/" title="（AST）抽象语法数 -- babel 插件">（AST）抽象语法数 -- babel 插件</a><time datetime="2021-08-09T16:00:00.000Z" title="发表于 2021-08-10 00:00:00">2021-08-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/09/commitizen/" title="用 commitizen 规范 git commit 提交说明"><img src="https://hfscdn.vercel.app/blog/image/commitizen-avatar.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="用 commitizen 规范 git commit 提交说明"/></a><div class="content"><a class="title" href="/2021/06/09/commitizen/" title="用 commitizen 规范 git commit 提交说明">用 commitizen 规范 git commit 提交说明</a><time datetime="2021-06-08T16:00:00.000Z" title="发表于 2021-06-09 00:00:00">2021-06-09</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://hfscdn.vercel.app/blog/image/top-index.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By huangfushan</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="true"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

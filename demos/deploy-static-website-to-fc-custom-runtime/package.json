@@ -1,0 +1,20 @@
+{
+  "name": "deploy-static-website-to-fc-custom-runtime",
+  "version": "1.0.0",
+  "description": "部署静态资源到函数计算FC，以custom runtime 环境运行",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "deploy": "s deploy"
+  },
+  "keywords": [
+    "static website",
+    "FC",
+    "serverless"
+  ],
+  "author": "huangfushan",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}

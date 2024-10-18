@@ -1,0 +1,206 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>通过 Github Webhooks 做网站的自动化部署 | Fushan Huang's Blog</title><meta name="keywords" content="github,git,webhooks"><meta name="author" content="huangfushan,243973775@qq.com"><meta name="copyright" content="huangfushan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言 Github Webhooks 允许我们构建或设置集成，以订阅 GitHub.com 上的某些事件。 当触发其中某个事件时，将向 Webhooks 配置 Paloyd URL 发送 HTTP POST 请求。可用于更新外部议题跟踪器、触发 CI 构建、更新备份镜像，甚至部署到生产服务器。  场景 个人博客如： 代码提交远程仓库 &#x3D;&gt; 触发 Github Webhooks &#x3D;&gt; 服">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过 Github Webhooks 做网站的自动化部署">
+<meta property="og:url" content="https://huangfushan.github.io/2021/08/12/github-webhooks/index.html">
+<meta property="og:site_name" content="Fushan Huang&#39;s Blog">
+<meta property="og:description" content="前言 Github Webhooks 允许我们构建或设置集成，以订阅 GitHub.com 上的某些事件。 当触发其中某个事件时，将向 Webhooks 配置 Paloyd URL 发送 HTTP POST 请求。可用于更新外部议题跟踪器、触发 CI 构建、更新备份镜像，甚至部署到生产服务器。  场景 个人博客如： 代码提交远程仓库 &#x3D;&gt; 触发 Github Webhooks &#x3D;&gt; 服">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hfscdn.vercel.app/blog/image/cover-github-webhooks.png">
+<meta property="article:published_time" content="2021-08-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-04-18T09:49:32.655Z">
+<meta property="article:author" content="huangfushan">
+<meta property="article:tag" content="教程">
+<meta property="article:tag" content="git">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hfscdn.vercel.app/blog/image/cover-github-webhooks.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://huangfushan.github.io/2021/08/12/github-webhooks/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-04-18 17:49:32'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://hfscdn.vercel.app/blog/image/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 目录</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 媒体</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://hfscdn.vercel.app/blog/image/cover-github-webhooks.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Fushan Huang's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 目录</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 媒体</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">通过 Github Webhooks 做网站的自动化部署</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2021-08-11T16:00:00.000Z" title="undefined 2021-08-12 00:00:00">2021-08-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="通过 Github Webhooks 做网站的自动化部署"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://docs.github.com/cn/developers/webhooks-and-events/webhooks/about-webhooks">Github Webhooks</a> 允许我们构建或设置集成，以订阅 <a target="_blank" rel="noopener" href="https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads">GitHub.com</a> 上的某些事件。 当触发其中某个事件时，将向 Webhooks 配置 Paloyd URL 发送 HTTP POST 请求。可用于更新外部议题跟踪器、触发 CI 构建、更新备份镜像，甚至部署到生产服务器。</p>
+</blockquote>
+<h4 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h4><ul>
+<li>个人博客<br>如： 代码提交远程仓库 =&gt; 触发 Github Webhooks =&gt; 服务器触发器监听 =&gt; 同步更新博客</li>
+</ul>
+<p>因本文重点在介绍 <code>webhooks</code> 的自动化功能，我们在此场景的基础上，简化一下步骤，将<code>远程服务器</code>改为<code>本地服务器</code>。<br>如：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 代码提交远程仓库 -&gt; 触发 Github Webhooks -&gt; <u>本地服务触发器监听</u> -&gt; 拉取最新代码</p>
+<h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><h3 id="配置-Shell-脚本"><a href="#配置-Shell-脚本" class="headerlink" title="配置 Shell 脚本"></a>配置 Shell 脚本</h3><ul>
+<li>创建 blog_deploy.sh 文件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;bash</span><br><span class="line"></span><br><span class="line">LOG_FILE&#x3D;&quot;&#x2F;Users&#x2F;huangfushan&#x2F;project&#x2F;code&#x2F;blog_deploy.log&quot;</span><br><span class="line"></span><br><span class="line">date &gt;&gt; &quot;$LOG_FILE&quot;</span><br><span class="line">echo &quot;Start deployment&quot; &gt;&gt;&quot;$LOG_FILE&quot;</span><br><span class="line">echo &quot;pulling source code...&quot; &gt;&gt; &quot;$LOG_FILE&quot;</span><br><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;huangfushan&#x2F;github-webhooks.git &#x2F;Users&#x2F;huangfushan&#x2F;project&#x2F;code&#x2F;huangfushan.github.io</span><br><span class="line">echo &quot;Finished.&quot; &gt;&gt;&quot;$LOG_FILE&quot;</span><br><span class="line">echo &gt;&gt; $LOG_FILE</span><br></pre></td></tr></table></figure>
+
+<p>大致意思是，当接收到请求时，会在本地指定目录下，拉取一份最新代码，模拟“服务器同步更新博客”的效果。</p>
+<h3 id="搭建本地服务器"><a href="#搭建本地服务器" class="headerlink" title="搭建本地服务器"></a>搭建本地服务器</h3><ul>
+<li>创建 index.js 文件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">var http &#x3D; require(&#39;http&#39;)</span><br><span class="line"></span><br><span class="line">const run_cmd &#x3D; (cmd, args, callback) &#x3D;&gt; &#123;</span><br><span class="line">  var spawn &#x3D; require(&#39;child_process&#39;).spawn;</span><br><span class="line">  var child &#x3D; spawn(cmd, args);</span><br><span class="line">  var resp &#x3D; &quot;&quot;;</span><br><span class="line"></span><br><span class="line">  child.stdout.on(&#39;data&#39;, function(buffer) &#123; resp +&#x3D; buffer.toString(); &#125;);</span><br><span class="line">  child.stdout.on(&#39;end&#39;, function() &#123; callback(resp) &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http.createServer(function(req, res) &#123;</span><br><span class="line">  if (req.url &#x3D;&#x3D;&#x3D; &#39;&#x2F;webhooks&#39;) &#123;</span><br><span class="line">    console.log(&#39;监听到接口请求&#39;);</span><br><span class="line">    run_cmd(&#39;sh&#39;, [&#39;.&#x2F;blog_deploy.sh&#39;], () &#x3D;&gt; console.log(1, &#39;run sucess&#39;));</span><br><span class="line">  &#125;</span><br><span class="line">  res.statusCode &#x3D; 200;</span><br><span class="line">  res.end(&#39;hello world&#39;);</span><br><span class="line">&#125;).listen(8080)</span><br><span class="line"></span><br><span class="line">console.log(&#39;http:&#x2F;&#x2F;localhost:8080&#39;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如上代码，当 HTTP 请求接口为 <code>/webhooks</code> 时，执行同步资源操作。当然，这里仅仅是一个例子，实际场景中需要校验 <code>Method</code>，<code>请求体</code>，<code>Secret 签名</code> 等信息</p>
+<ul>
+<li>执行代码，启动端口为 8080 的本地服务</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ node index.js</span><br></pre></td></tr></table></figure>
+
+<!-- - 当服务接收到来自 http://localhost:8080/webhooks 的请求时，拉取远程最新代码。 -->
+
+<ul>
+<li>通过 <code>ngrok</code> 实现内网穿透服务</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install ngrok -g</span><br><span class="line">ngrok http localhost:8080</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://hfscdn.vercel.app/blog/image/ngrok.jpg" alt="img"></p>
+<p>如上图，本地 <code>localhost:8080</code> 指向了 <code>http://8ffcaa193540.ngrok.io</code>，这么做的目前是为了向互联网暴露本地主机，支持外网访问，也为了下一步 Webhooks 的配置使用，。</p>
+<p>当然，除了<code>ngrok</code>，也可以通过 <code>nginx</code> 将 当前服务反向代理到指定外网地址的 80 端口。</p>
+<h3 id="配置-Github-Webhooks"><a href="#配置-Github-Webhooks" class="headerlink" title="配置 Github Webhooks"></a>配置 Github Webhooks</h3><ul>
+<li><p>创建一个 Github 仓库，如 <code>github-webhooks</code>。</p>
+</li>
+<li><p>到 <code>github-webhooks</code> 下 Settings，配置 Github Webhooks 监听，其中</p>
+<ul>
+<li><p><code>Payload URL</code>：用来接收请求接口，github 接收到 Repo 的操作指令时，会往这个接口发送一个带有描述操作内容的 Post 请求。这里，我们填写第二步暴露的外网地址，如 <code>http://8ffcaa193540.ngrok.io/webhooks</code>，实际效果 Github 将往本地 8080 端口服务发送一个接口为 <code>/webhooks</code> 的 HTTP 请求。</p>
+</li>
+<li><p><code>Content Type</code>：两种传参方式，application/json 和 application/x-www-form-urlencoded</p>
+</li>
+<li><p><code>Secret</code>：令牌校验，加上这个字段之后，来自 Github 的请求 HTTP 请求头会携带 X-Hub-Signature 的加密签名，防止其他恶意请求触发。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://hfscdn.vercel.app/blog/image/dk-github-webhooks.png" alt="img"></p>
+<p><img src="https://hfscdn.vercel.app/blog/image/github-webhooks-add.jpg" alt="img"></p>
+<h3 id="触发-Github-Webhooks"><a href="#触发-Github-Webhooks" class="headerlink" title="触发 Github Webhooks"></a>触发 Github Webhooks</h3><ul>
+<li>往 <code>github-webhooks</code> 远程仓库提交一个 <code>commit</code>，查看是否在本地触发执行 shell 脚本</li>
+<li>查看 Recent Deliverles 日志</li>
+</ul>
+<p><img src="https://hfscdn.vercel.app/blog/image/github-webhooks-trigger.jpg" alt="img"></p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><blockquote>
+<p>搭建本地服务器那一步，部分网友使用 <code>github-webhook-handler</code> 插件，来处理 Github 发送过来的 HTTP 请求，并监听各类事件，如 <code>push</code>, <code>issues</code>等。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">var http &#x3D; require(&#39;http&#39;)</span><br><span class="line">var createHandler &#x3D; require(&#39;github-webhook-handler&#39;)</span><br><span class="line">var handler &#x3D; createHandler(&#123; path: &#39;&#x2F;webhooks&#39;, secret: &#39;myHashSecret&#39; &#125;);</span><br><span class="line">&#x2F;&#x2F; 上面的 secret 保持和 GitHub 后台设置的一致</span><br><span class="line"></span><br><span class="line">http.createServer(function (req, res) &#123;</span><br><span class="line">  handler(req, res, function (err) &#123;</span><br><span class="line">    res.statusCode &#x3D; 404</span><br><span class="line">    res.end(&#39;no such location&#39;)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;).listen(8080)</span><br><span class="line"></span><br><span class="line">handler.on(&#39;error&#39;, function (err) &#123;</span><br><span class="line">  console.error(&#39;发生错误:&#39;, err.message)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">handler.on(&#39;push&#39;, function (event) &#123;</span><br><span class="line">  console.log(&#39;接收到push请求&#39;）</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>这样也是很方便的，该插件已经帮我们处理了，<code>path</code>，<code>method</code>，<code>Secret 令牌签名</code>等等校验，并针对 Github 各种事件监听。但是美中不足的是，该插件不支持 <code>application/x-www-form-urlencoded</code> 的请求方式，仅支持 JSON 格式。</p>
+<p>后续我会另找时间，争取解决上诉插件存在的问题。</p>
+<p>github 更多事件，见 <a target="_blank" rel="noopener" href="https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads">Webhooks events &amp; Payloads</a>。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:243973775@qq.com">huangfushan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://huangfushan.github.io/2021/08/12/github-webhooks/">https://huangfushan.github.io/2021/08/12/github-webhooks/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://huangfushan.github.io" target="_blank">Fushan Huang's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%99%E7%A8%8B/">教程</a><a class="post-meta__tags" href="/tags/git/">git</a></div><div class="post_share"><div class="social-share" data-image="https://hfscdn.vercel.app/blog/image/cover-github-webhooks.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/03/16/serverless-devs/"><img class="prev-cover" src="https://hfscdn.vercel.app/blog/image/cover-ast.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">通过 @serverless-devs/s 部署静态网站到阿里云函数计算FC</div></div></a></div><div class="next-post pull-right"><a href="/2021/08/10/babel/"><img class="next-cover" src="https://hfscdn.vercel.app/blog/image/cover-ast.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">（AST）抽象语法数 -- babel 插件</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/04/26/blog/" title="搭建个人博客 Hexo + Github Page"><img class="cover" src="https://hfscdn.vercel.app/blog/image/cover-blog.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-26</div><div class="title">搭建个人博客 Hexo + Github Page</div></div></a></div><div><a href="/2021/05/05/deploy/" title="静态网站托管服务"><img class="cover" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/Photo/friends.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-05</div><div class="title">静态网站托管服务</div></div></a></div><div><a href="/2021/06/02/lerna/" title="通过 Lerna 实现多个软件包的管理"><img class="cover" src="https://hfscdn.vercel.app/blog/image/cover-lerna.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-02</div><div class="title">通过 Lerna 实现多个软件包的管理</div></div></a></div><div><a href="/2022/03/16/serverless-devs/" title="通过 @serverless-devs/s 部署静态网站到阿里云函数计算FC"><img class="cover" src="https://hfscdn.vercel.app/blog/image/cover-ast.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-16</div><div class="title">通过 @serverless-devs/s 部署静态网站到阿里云函数计算FC</div></div></a></div><div><a href="/2021/06/09/commitizen/" title="用 commitizen 规范 git commit 提交说明"><img class="cover" src="https://hfscdn.vercel.app/blog/image/commitizen-avatar.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-09</div><div class="title">用 commitizen 规范 git commit 提交说明</div></div></a></div><div><a href="/2021/04/25/git/" title="Git 指令"><img class="cover" src="https://hfscdn.vercel.app/blog/image/git-avatar.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-25</div><div class="title">Git 指令</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://hfscdn.vercel.app/blog/image/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">huangfushan</div><div class="author-info__description">Beleave you, beleave us, beleave we can change the world.</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/huangfushan"><i class="fab fa-github"></i><span>Github</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog !</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">场景</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B"><span class="toc-number">1.1.</span> <span class="toc-text">开始</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-Shell-%E8%84%9A%E6%9C%AC"><span class="toc-number">1.1.1.</span> <span class="toc-text">配置 Shell 脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA%E6%9C%AC%E5%9C%B0%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">1.1.2.</span> <span class="toc-text">搭建本地服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-Github-Webhooks"><span class="toc-number">1.1.3.</span> <span class="toc-text">配置 Github Webhooks</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A6%E5%8F%91-Github-Webhooks"><span class="toc-number">1.1.4.</span> <span class="toc-text">触发 Github Webhooks</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%9C%A8%E6%9C%80%E5%90%8E"><span class="toc-number">1.2.</span> <span class="toc-text">写在最后</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/03/30/regexp/" title="正则表达式"><img src="https://hfscdn.vercel.app/blog/image/avatar-regex.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="正则表达式"/></a><div class="content"><a class="title" href="/2022/03/30/regexp/" title="正则表达式">正则表达式</a><time datetime="2022-03-30T10:59:22.000Z" title="发表于 2022-03-30 18:59:22">2022-03-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/16/serverless-devs/" title="通过 @serverless-devs/s 部署静态网站到阿里云函数计算FC"><img src="https://hfscdn.vercel.app/blog/image/cover-ast.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="通过 @serverless-devs/s 部署静态网站到阿里云函数计算FC"/></a><div class="content"><a class="title" href="/2022/03/16/serverless-devs/" title="通过 @serverless-devs/s 部署静态网站到阿里云函数计算FC">通过 @serverless-devs/s 部署静态网站到阿里云函数计算FC</a><time datetime="2022-03-15T16:00:00.000Z" title="发表于 2022-03-16 00:00:00">2022-03-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/12/github-webhooks/" title="通过 Github Webhooks 做网站的自动化部署"><img src="https://hfscdn.vercel.app/blog/image/cover-github-webhooks.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="通过 Github Webhooks 做网站的自动化部署"/></a><div class="content"><a class="title" href="/2021/08/12/github-webhooks/" title="通过 Github Webhooks 做网站的自动化部署">通过 Github Webhooks 做网站的自动化部署</a><time datetime="2021-08-11T16:00:00.000Z" title="发表于 2021-08-12 00:00:00">2021-08-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/10/babel/" title="（AST）抽象语法数 -- babel 插件"><img src="https://hfscdn.vercel.app/blog/image/cover-ast.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="（AST）抽象语法数 -- babel 插件"/></a><div class="content"><a class="title" href="/2021/08/10/babel/" title="（AST）抽象语法数 -- babel 插件">（AST）抽象语法数 -- babel 插件</a><time datetime="2021-08-09T16:00:00.000Z" title="发表于 2021-08-10 00:00:00">2021-08-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/09/commitizen/" title="用 commitizen 规范 git commit 提交说明"><img src="https://hfscdn.vercel.app/blog/image/commitizen-avatar.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="用 commitizen 规范 git commit 提交说明"/></a><div class="content"><a class="title" href="/2021/06/09/commitizen/" title="用 commitizen 规范 git commit 提交说明">用 commitizen 规范 git commit 提交说明</a><time datetime="2021-06-08T16:00:00.000Z" title="发表于 2021-06-09 00:00:00">2021-06-09</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://hfscdn.vercel.app/blog/image/top-index.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By huangfushan</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="true"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

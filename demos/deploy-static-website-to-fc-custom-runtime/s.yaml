@@ -1,0 +1,29 @@
+# https://github.com/devsapp/fc/blob/main/docs/zh/yaml/
+edition: 1.0.0
+access: hfs-access
+name: deploy-static-website-to-fc-custom-runtime
+services:
+  my-service: # 任意的名称
+    component: devsapp/fc # 使用 fc 组件
+    props:
+      region: cn-hangzhou # 部署到任意的可用区, 例如杭州
+      service:
+        name: my-awesome-app # 杭州可用区的 my-awesome-app 服务
+      function:
+        name: deploy-static-website-to-fc-custom-runtime # my-awesome-app 服务下的一个函数
+        runtime: custom # 使用 custom 运行环境
+        handler: index.handler
+        codeUri: ./ # 部署当前文件夹下的全部内容
+      triggers:
+        - name: http
+          type: http # 创建一个 HTTP 类型的触发器, 以便客户端可以通过 HTTP 协议进行访问
+          config:
+            authType: anonymous # 允许匿名访问
+            methods: # 静态网站只需要处理 HEAD 和 GET 请求就够了
+              - GET
+              - POST
+      customDomains:
+        - domainName: auto # 添加自定义域名
+          protocol: HTTP
+          routeConfigs:
+            - path: /*

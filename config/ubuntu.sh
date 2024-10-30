@@ -48,4 +48,8 @@ sed -i '/^plugins=/ s/)/ docker zsh-autosuggestions)/' ~/.zshrc
 sed -i 's|^ZSH_THEME="robbyrussell"|ZSH_THEME="dpoggi"|' ~/.zshrc
 source .zshrc
 
+# ssh
+chmod 600 ~/.ssh/id_rsa
+[ -e .ssh/authorized_keys ] || (touch .ssh/authorized_keys && chmod 600 .ssh/authorized_keys)
+
 EOF

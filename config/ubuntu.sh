@@ -38,14 +38,18 @@ systemctl restart sshd
 sudo -i -u "$USERNAME" bash <<EOF
 set -e
 
+# zsh
+[ -e .zshrc ] || curl -sfO https://raw.githubusercontent.com/heiemooa/heiemooa/refs/heads/main/config/.zshrc
+
 # 安装 ohmyzsh 主题
 echo $SHELL
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
 
 [ -e .oh-my-zsh/custom/plugins/zsh-autosuggestions ] || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions .oh-my-zsh/custom/plugins/zsh-autosuggestions
+[ -e .oh-my-zsh/custom/plugins/zsh-syntax-highlighting ] || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting .oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 
-sed -i '/^plugins=/ s/)/ docker zsh-autosuggestions)/' ~/.zshrc
-sed -i 's|^ZSH_THEME="robbyrussell"|ZSH_THEME="dpoggi"|' ~/.zshrc
+sed -i '/^plugins=/ s/)/ docker zsh-autosuggestions zsh-syntax-highlighting)/' ~/.zshrc
+sed -i 's|^ZSH_THEME="robbyrussell"|ZSH_THEME="alanpeabody"|' ~/.zshrc
 source .zshrc
 
 # ssh

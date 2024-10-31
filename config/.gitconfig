@@ -1,0 +1,11 @@
+
+## 用户名
+git config --global user.name "heiemooa"
+git config --global user.email "<邮箱>"
+
+# ssh key
+ssh-keygen -t rsa -C "<邮箱>"
+
+# 别名
+git config --global alias.ll "log --graph --decorate --pretty=oneline --abbrev-commit --all"
+git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset %C(bold blue)<%an>%Creset ---%C(yellow)%d%Creset %s %Cgreen(%cr)' --abbrev-commit"

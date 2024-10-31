@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# ubuntu 新机器默认配置
+# debian 新机器默认配置
 
 # 上海时间
 sudo timedatectl set-timezone Asia/Shanghai
@@ -42,8 +42,8 @@ set -e
 [ -e ~/.zshrc ] || curl -sfo ~/.zshrc https://raw.githubusercontent.com/heiemooa/heiemooa/refs/heads/main/config/.zshrc
 
 # 安装 ohmyzsh 主题
-echo $SHELL
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
+echo \$SHELL
+sh -c "\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
 
 [ -e ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ] || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 [ -e ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ] || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
@@ -54,6 +54,5 @@ source ~/.zshrc
 
 # ssh
 chmod 600 ~/.ssh/id_rsa
-[ -e ~/.ssh/authorized_keys ] || (touch .ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys)
-
+[ -e ~/.ssh/authorized_keys ] || (touch ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys)
 EOF

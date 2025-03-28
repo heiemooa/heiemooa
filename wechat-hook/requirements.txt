@@ -1,0 +1,17 @@
+certifi==2025.1.31
+charset-normalizer==3.4.1
+colorama==0.4.6
+frida==16.6.5
+frida-tools==13.6.1
+idna==3.10
+jsondiff==2.2.1
+prompt_toolkit==3.0.50
+Pygments==2.19.1
+PyYAML==6.0.2
+requests==2.32.3
+setuptools==75.8.0
+urllib3==2.3.0
+wcwidth==0.2.13
+websockets==13.1
+python-dotenv==0.21.0
+

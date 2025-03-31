@@ -1,0 +1,27 @@
+{
+  "name": "cf-schedule",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc && wrangler dev",
+    "deploy": "tsc && wrangler deploy",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/lodash.get": "^4.4.9",
+    "axios": "^1.8.4",
+    "lodash.get": "^4.4.2",
+    "node-schedule": "^2.1.1",
+    "typescript": "^5.8.2"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250327.0",
+    "wrangler": "^4.6.0"
+  }
+}

@@ -1,2 +1,5 @@
 wechat-hook/.files
 wechat-hook/.frida
+.wrangler
+*/node_modules
+*/dist

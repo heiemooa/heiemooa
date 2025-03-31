@@ -1,0 +1,17 @@
+name = "weather-test"
+main = "dist/index.js"
+compatibility_date = "2024-03-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+WECHAT_BOT_KEY = 'YOUR_WECHAT_BOT_KEY' # 企微机器人 WEBHOOK KEY
+SENIVERSE_KEY = 'YOUR_SENIVERSE_KEY' # 心知天气KEY
+WEATHER_CITY = 'YOUR_WEATHER_CITY' # 城市
+
+
+# 工作日（北京时间 9:00, 18:00）运行
+[triggers]
+crons = [
+  "0 1 * * 2-6",   # 每天 UTC 1:00（北京时间 9:00）
+  "0 10 * * 2-6"    # 每天 UTC 10:00（北京时间 18:00）
+]

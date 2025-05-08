@@ -66,3 +66,9 @@ WECHAT_BOT_KEY='KEY'
 ```
 sh start.sh
 ```
+
+## 也可以通过 MacOS launchctl 定时器
+
+```
+launchctl unload schedule.plist
+```

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.user.wechathook</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/sh</string>
+        <string>-c</string>
+        <string>cd /Users/emooa/heiemooa/wechat-hook && sh start.sh</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Minute</key>
+        <integer>0</integer>  <!-- 每小时的第0分钟执行 -->
+    </dict>
+    <key>RunAtLoad</key>
+    <true/>  <!-- 启动时立即运行一次 -->
+    <key>StandardOutPath</key>
+    <string>/tmp/wechathook.log</string>  <!-- 日志输出 -->
+    <key>StandardErrorPath</key>
+    <string>/tmp/wechathook.error.log</string>
+</dict>
+</plist>

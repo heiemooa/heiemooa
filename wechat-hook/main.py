@@ -140,7 +140,6 @@ def summary(prev, curr, diff, path=None, prev_key=None, curr_users=None, prev_us
             else:
                 yield f'在 [{path}] 中, <{k}> 发生了变化: {v}'
 
-
 def find_first_join_time(name):
     files = sorted(os.listdir('.files'))
     if files:
@@ -148,7 +147,11 @@ def find_first_join_time(name):
             with codecs.open(f'.files/{file}', 'r', 'utf-8') as f:
                 if name in coll_users(json.load(f)):
                     ts, _ = os.path.splitext(file)
-                    dt = datetime.fromtimestamp(int(ts))
+                    if isinstance(ts, str) and '-' in ts:
+                        dt = datetime.strptime(ts, '%Y-%m-%d %H:%M:%S')
+                    # 如果是数字时间戳
+                    else:
+                        dt = datetime.fromtimestamp(int(ts))
                     if i == 0:
                         return f'BEFORE {dt.strftime("%Y-%m-%d")}'
                     return dt.strftime('%Y-%m-%d')

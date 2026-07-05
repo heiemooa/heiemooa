@@ -1,21 +1,35 @@
 #!/usr/bin/env bash
 
-# debian 新机器默认配置
+# Debian/Ubuntu 新机器默认配置
 
-set -euo pipefail
+set -Eeuo pipefail
+
+log() {
+  printf '\n[%s] %s\n' "$(date '+%H:%M:%S')" "$*"
+}
+
+trap 'echo "脚本失败：第 ${LINENO} 行：${BASH_COMMAND}" >&2' ERR
 
 USERNAME=${1:-zeyu}
 USER_PASSWORD=${USER_PASSWORD:-}
 NODE_MAJOR=${NODE_MAJOR:-22}
+ENABLE_PASSWORD_AUTH=${ENABLE_PASSWORD_AUTH:-1}
+ENABLE_ROOT_LOGIN=${ENABLE_ROOT_LOGIN:-0}
+export DEBIAN_FRONTEND=${DEBIAN_FRONTEND:-noninteractive}
 
 if [ "$(id -u)" -ne 0 ]; then
   echo "请使用 root 执行：sudo bash $0"
   exit 1
 fi
 
+if [[ ! "$USERNAME" =~ ^[a-z_][a-z0-9_-]*[$]?$ ]]; then
+  echo "用户名不合法：$USERNAME"
+  exit 1
+fi
+
 source /etc/os-release
 OS_ID="$ID"
-CODENAME="$VERSION_CODENAME"
+CODENAME="${VERSION_CODENAME:-${UBUNTU_CODENAME:-}}"
 
 case "$OS_ID" in
   debian|ubuntu) ;;
@@ -25,18 +39,28 @@ case "$OS_ID" in
     ;;
 esac
 
+if [ -z "$CODENAME" ]; then
+  echo "无法从 /etc/os-release 识别系统代号，请手动设置 VERSION_CODENAME 后重试"
+  exit 1
+fi
+
 # 如果之前写入了错误的 Docker 源，先清理，避免 apt update 失败
 rm -f /etc/apt/sources.list.d/docker.list
 
 # 上海时间
+log "设置时区为 Asia/Shanghai"
 timedatectl set-timezone Asia/Shanghai
 
+log "更新系统并安装基础工具"
 apt update
 apt upgrade -y
-apt install -y ca-certificates curl gnupg vim wget zsh git sudo
+apt install -y ca-certificates curl gnupg vim wget zsh git sudo openssh-server
+install -m 0755 -d /etc/apt/keyrings
 
 # 安装 Node.js 和 Yarn。不要 apt install yarn，Ubuntu 会误装 cmdtest。
+log "安装 Node.js ${NODE_MAJOR}.x 和 Yarn"
 rm -f /etc/apt/sources.list.d/nodesource.list
+rm -f /etc/apt/keyrings/nodesource.gpg
 curl --retry 5 --retry-delay 3 --connect-timeout 20 -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
   | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
 
@@ -50,8 +74,11 @@ corepack enable
 corepack prepare yarn@stable --activate
 
 # 创建默认用户
+log "创建或更新用户：$USERNAME"
+USER_CREATED=0
 if ! id "$USERNAME" >/dev/null 2>&1; then
   useradd -m -s /usr/bin/zsh "$USERNAME"
+  USER_CREATED=1
 else
   chsh -s /usr/bin/zsh "$USERNAME"
 fi
@@ -59,12 +86,19 @@ fi
 if [ "$USERNAME" != "root" ]; then
   if [ -n "$USER_PASSWORD" ]; then
     echo "$USERNAME:$USER_PASSWORD" | chpasswd
-  elif passwd -S "$USERNAME" | grep -q ' L '; then
-    passwd "$USERNAME"
+  elif [ -r /dev/tty ]; then
+    PASSWORD_STATUS="$(passwd -S "$USERNAME" 2>/dev/null | awk '{print $2}')"
+    if [ "$USER_CREATED" = "1" ] || [ "$PASSWORD_STATUS" != "P" ]; then
+      log "设置 $USERNAME 的登录密码"
+      passwd "$USERNAME" </dev/tty
+    fi
+  else
+    log "当前没有可交互终端，跳过密码设置；请稍后执行：sudo passwd $USERNAME"
   fi
 fi
 
 if [ "$USERNAME" != "root" ]; then
+  log "授予 $USERNAME sudo 权限"
   usermod -aG sudo "$USERNAME"
 
   cat >/etc/sudoers.d/99-"$USERNAME" <<EOF
@@ -76,11 +110,11 @@ EOF
 fi
 
 # 安装 Docker Engine 和 Compose V2 插件：命令为 docker compose，不是 docker-compose
+log "安装 Docker Engine 和 Docker Compose V2 插件"
 for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do
   apt remove -y "$pkg" >/dev/null 2>&1 || true
 done
 
-install -m 0755 -d /etc/apt/keyrings
 DOCKER_APT_BASE=${DOCKER_APT_BASE:-https://download.docker.com/linux/$OS_ID}
 
 if ! curl --retry 5 --retry-delay 3 --connect-timeout 20 -fsSL "$DOCKER_APT_BASE/gpg" -o /etc/apt/keyrings/docker.asc; then
@@ -111,45 +145,103 @@ apt update
 apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 systemctl enable --now docker
 
-[ "$USERNAME" = "root" ] || usermod -aG docker "$USERNAME"
+if [ "$USERNAME" != "root" ]; then
+  getent group docker >/dev/null || groupadd docker
+  usermod -aG docker "$USERNAME"
+fi
 
 # 修改 ssh 配置
-# sed -i 's|UsePAM yes|UsePAM no|' /etc/ssh/sshd_config
-sed -i 's|#\?\s*PasswordAuthentication no|PasswordAuthentication yes|' /etc/ssh/sshd_config
-sed -i 's|#\?\s*PermitRootLogin [^ ]*|PermitRootLogin yes|' /etc/ssh/sshd_config
-# 如何还是不能账号密码登录，检查 /etc/ssh/sshd_config.d/* 下的子文件，可能被这些文件覆盖了配置
-# sed -i 's|PasswordAuthentication no|PasswordAuthentication yes|' /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
-sed -i 's|X11Forwarding yes|X11Forwarding no|' /etc/ssh/sshd_config
-sed -i 's|#ClientAliveInterval 0|ClientAliveInterval 60|' /etc/ssh/sshd_config
-sed -i 's|#ClientAliveCountMax 3|ClientAliveCountMax 10|' /etc/ssh/sshd_config
+log "更新 SSH 配置"
+install -m 0755 -d /etc/ssh/sshd_config.d
+SSH_INIT_CONF=/etc/ssh/sshd_config.d/00-heiemooa-init.conf
+
+if ! grep -Eq '^[[:space:]]*Include[[:space:]]+/etc/ssh/sshd_config\.d/\*\.conf' /etc/ssh/sshd_config; then
+  sed -i '1i Include /etc/ssh/sshd_config.d/*.conf' /etc/ssh/sshd_config
+fi
+
+{
+  echo "X11Forwarding no"
+  echo "ClientAliveInterval 60"
+  echo "ClientAliveCountMax 10"
+  if [ "$ENABLE_PASSWORD_AUTH" = "1" ]; then
+    echo "PasswordAuthentication yes"
+  fi
+  if [ "$ENABLE_ROOT_LOGIN" = "1" ]; then
+    echo "PermitRootLogin yes"
+  else
+    echo "PermitRootLogin prohibit-password"
+  fi
+} >"$SSH_INIT_CONF"
+
+sshd -t
 if systemctl list-unit-files sshd.service >/dev/null 2>&1; then
   systemctl restart sshd
 else
   systemctl restart ssh
 fi
 
+log "配置 $USERNAME 的 zsh、oh-my-zsh 和插件"
+sudo -H -u "$USERNAME" bash <<'EOF'
+set -euo pipefail
 
-sudo -i -u "$USERNAME" bash <<EOF
-set -e
+clone_if_missing() {
+  local target=$1
+  local primary=$2
+  local mirror=${3:-}
+
+  if [ -d "$target" ]; then
+    return
+  fi
+
+  git clone --depth=1 "$primary" "$target" && return
+
+  if [ -n "$mirror" ]; then
+    git clone --depth=1 "$mirror" "$target" && return
+  fi
+
+  return 1
+}
 
 # zsh
-[ -e ~/.zshrc ] || curl --retry 3 --retry-delay 3 --connect-timeout 20 -sfo ~/.zshrc https://raw.githubusercontent.com/heiemooa/heiemooa/refs/heads/main/config/.zshrc || touch ~/.zshrc
+if [ ! -f "$HOME/.zshrc" ]; then
+  cat >"$HOME/.zshrc" <<'ZSHRC'
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="alanpeabody"
+plugins=(git docker zsh-autosuggestions zsh-syntax-highlighting)
+
+if [ -f "$ZSH/oh-my-zsh.sh" ]; then
+  source "$ZSH/oh-my-zsh.sh"
+fi
+ZSHRC
+fi
 
 # 安装 ohmyzsh 主题
-echo \$SHELL
 if [ ! -d ~/.oh-my-zsh ]; then
-  git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh \
-    || git clone --depth=1 https://gitee.com/mirrors/oh-my-zsh.git ~/.oh-my-zsh \
-    || true
+  clone_if_missing "$HOME/.oh-my-zsh" \
+    https://github.com/ohmyzsh/ohmyzsh.git \
+    https://gitee.com/mirrors/oh-my-zsh.git || true
 fi
 
 if [ -d ~/.oh-my-zsh ]; then
   mkdir -p ~/.oh-my-zsh/custom/plugins
-  [ -e ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ] || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions || true
-  [ -e ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ] || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting || true
+  clone_if_missing "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" \
+    https://github.com/zsh-users/zsh-autosuggestions \
+    "" || true
+  clone_if_missing "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" \
+    https://github.com/zsh-users/zsh-syntax-highlighting \
+    "" || true
 
-  sed -i '/^plugins=.*\(docker\|zsh-autosuggestions\|zsh-syntax-highlighting\)/! s/^plugins=(/&docker zsh-autosuggestions zsh-syntax-highlighting /' ~/.zshrc
-  sed -i 's|^ZSH_THEME="robbyrussell"|ZSH_THEME="alanpeabody"|' ~/.zshrc
+  if grep -q '^ZSH_THEME=' "$HOME/.zshrc"; then
+    sed -i 's|^ZSH_THEME=.*|ZSH_THEME="alanpeabody"|' "$HOME/.zshrc"
+  else
+    sed -i '1i ZSH_THEME="alanpeabody"' "$HOME/.zshrc"
+  fi
+
+  if grep -q '^plugins=' "$HOME/.zshrc"; then
+    sed -i 's|^plugins=.*|plugins=(git docker zsh-autosuggestions zsh-syntax-highlighting)|' "$HOME/.zshrc"
+  else
+    sed -i '/oh-my-zsh.sh/i plugins=(git docker zsh-autosuggestions zsh-syntax-highlighting)' "$HOME/.zshrc"
+  fi
 fi
 
 # ssh
@@ -159,8 +251,10 @@ chmod 700 ~/.ssh
 [ -e ~/.ssh/authorized_keys ] || (touch ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys)
 EOF
 
+log "验证安装结果"
 docker --version
 docker compose version
+id "$USERNAME"
 
 # 如果之前脚本写坏过 Docker 源，先清理一次再跑
 # sudo rm -f /etc/apt/sources.list.d/docker.list
